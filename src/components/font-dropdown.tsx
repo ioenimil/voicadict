@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,30 +9,34 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import { ArrowDownIcon } from "lucide-react";
 import { Label } from "./ui/label";
-export function DropdownMenuRadioGroupDemo() {
+import { ChevronDown, ChevronUp } from "lucide-react";
+import { DropdownMenuArrow } from "@radix-ui/react-dropdown-menu";
+export function FontSelect() {
   const [value, setValue] = useState("Sans Serif");
-  useEffect(() => {
-    console.log(value);
-  });
+  const [DropdownMenuOpened, setDropdownMenuOpened] = useState(false);
 
   return (
-    <DropdownMenu>
+    <DropdownMenu dir="rtl" onOpenChange={setDropdownMenuOpened}>
       <DropdownMenuTrigger asChild>
-        <div className="flex justify-end text-right w-[120px] items-center gap-1">
-          <Label id="font-dropdown " className=" text-right">
+        <div className="flex justify-end  text-right  items-center gap-1">
+          <Label id="font-dropdown  " className="  text-right">
             {value}
           </Label>
-          <ArrowDownIcon id="font-dropdown" />
+          {DropdownMenuOpened ? (
+            <ChevronUp id="block font-dropdown" />
+          ) : (
+            <ChevronDown id="block font-dropdown" />
+          )}
         </div>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent className="w-56">
+      <DropdownMenuContent align="start" className="">
         <DropdownMenuRadioGroup value={value} onValueChange={setValue}>
           <DropdownMenuRadioItem value="Sans Serif">
             Sans Serif
           </DropdownMenuRadioItem>
+          <DropdownMenuArrow />
           <DropdownMenuRadioItem value="Serif">Serif</DropdownMenuRadioItem>
           <DropdownMenuRadioItem value="Mono">Mono</DropdownMenuRadioItem>
         </DropdownMenuRadioGroup>
