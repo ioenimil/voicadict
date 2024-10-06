@@ -1,57 +1,37 @@
-import NavBar from "@/components/nav-bar";
-import SearchBar from "@/components/search-bar";
+"use client";
 
-import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import MainSection from "@/components/main-section";
+import NavBar from "@/components/nav-bar";
+import useFontStore from "@/store/settings-store";
+import { useEffect, useState } from "react";
+
+//create fonts for serif, sans-serif, and mono
 
 export default function Home() {
+  const { fontFamily } = useFontStore();
+  const [font, setFont] = useState("sans");
+
+  useEffect(() => {
+
+    if (fontFamily === "sans") {
+      setFont("sans");
+    } else if (fontFamily === "serif") {
+      setFont("serif");
+    } else if (fontFamily === "mono") {
+      setFont("mono");
+    }
+  },[fontFamily]);
+
   return (
-    <main className="  h-full p-4 grid gap-4 grid-cols-12 grid-rows-6">
+    <main className={`  h-full p-4 grid gap-4 grid-cols-12 grid-rows-6`}>
       <div className=" col-span-12 lg:col-start-3 lg:col-span-8 row-span-6  pt-10 pb-2 px-4 md:px-20">
-        <div className="flex flex-col gap-10 h-full w-full ">
+        <div
+          className={`flex ${`font-${font}`} flex-col gap-10 h-full w-full `}
+        >
           <section className=" flex flex-col gap-4">
             <NavBar />
-            <div className="">
-              <SearchBar />
-            </div>
           </section>
-
-          <ScrollArea className=" h-full  shadow-xl flex flex-col justify-between ">
-            <div>
-              <section className=" md:h-[116px] ">
-                <div className=" w-full flex justify-between items-center">
-                  <div>
-                    <h2 className=" text-4xl font-bold">Insosophysical</h2>
-                    <p>Pronounciation</p>
-                  </div>
-                  <div>
-                    <Button>Play</Button>
-                  </div>
-                </div>
-              </section>
-              <section className=" h-[377px]">
-                <div>
-                  <h1 className="text-3xl font-bold">Welcome to Next.js!</h1>
-                  <p className="mt-3 text-lg">
-                    Get started by editing <code>pages/index.js</code>
-                  </p>
-                </div>
-              </section>
-              <section>
-                <div>
-                  <h1 className="text-3xl font-bold">Welcome to Next.js!</h1>
-                  <p className="mt-3 text-lg">
-                    Get started by editing <code>pages/index.js</code>
-                  </p>
-                </div>
-              </section>
-            </div>
-            <footer>
-              <div>
-                <h1 className="text-3xl font-bold">Footer</h1>
-              </div>
-            </footer>
-          </ScrollArea>
+          <MainSection />
         </div>
       </div>
     </main>
