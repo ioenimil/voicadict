@@ -17,7 +17,7 @@ interface SearchStore {
   setIsSearching: (isSearching: boolean) => void;
   setIsLoading: (isLoading: boolean) => void;
   setIsError: (isError: boolean, errorMessage?: string) => void;
-  setSearchResults: (results: any[]) => void; // Replace 'any' with the specific type if needed
+  setSearchResults: (results: object) => void; // Replace 'any' with the specific type if needed
   setSuggestedWords: (words: string[]) => void;
   toggleAudio: () => void;
   setSelectedResultIndex: (index: number) => void;

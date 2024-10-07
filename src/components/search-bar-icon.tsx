@@ -1,10 +1,11 @@
 import React from "react";
 import { Search } from "lucide-react";
 import { X } from "lucide-react";
-import { SunIcon } from "lucide-react";
+import {  Lightbulb } from "lucide-react";
 
 
 function Icon({ type, className }: { type: string, className:string }) {
+  console.log("type", type);
   switch (type) {
     case "search":
       return <Search className={className} />;
@@ -17,7 +18,7 @@ function Icon({ type, className }: { type: string, className:string }) {
       break;
 
     default:
-      return <SunIcon className={className} />;
+      return <Lightbulb className={className} />;
       break;
   }
 }

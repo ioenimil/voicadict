@@ -11,7 +11,7 @@ export default function NavBar({}: Props) {
   return (
     <nav className=" flex justify-between  w-full">
       <Image
-        src="/assets/images/iconoir_book.svg"
+        src="/assets/images/svg/iconoir_book.svg"
         alt="Logo"
         width={32}
         height={36}

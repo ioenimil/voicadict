@@ -3,7 +3,22 @@ import Turnstone from "turnstone";
 import SplitMatch from "split-match";
 import RecentSearchesPlugin from "turnstone-recent-searches";
 import Icon from "./search-bar-icon";
+import { get, set } from "lodash";
+import { getDictionaryApiData, getTopDictionarySuggestions } from "@/lib/api-helper";
+import { useSearchStore } from "@/store/search-store";
 
+interface ListItem {
+  value: {
+    name: string;
+  };
+  text: string;
+  groupIndex: number;
+  groupId: string;
+  groupName: string;
+  searchType: "contains" | "startswith";
+  displayField: string;
+  defaultListbox: boolean;
+}
 
 // Tailwind classes for Turnstone elements
 const styles = {
@@ -33,31 +48,20 @@ const maxItems = 5;
 // API endpoints. 10 from each but ideally we only want to show 8 cities and 2 airports.
 const listbox = [
   {
-    id: "city",
-    name: "Cities",
-    ratio: 8,
-    displayField: "name",
-    data: (query) =>
-      fetch(
-        `/api/cities?q=${encodeURIComponent(query)}&limit=${maxItems}`
-      ).then((response) => response.json()),
-    searchType: "startswith",
-  },
-  {
-    id: "airport",
-    name: "Airports",
-    ratio: 2,
-    displayField: "name",
-    data: (query) =>
-      fetch(
-        `/api/airports?q=${encodeURIComponent(query)}&limit=${maxItems}`
-      ).then((response) => response.json()),
+    id: "suggestions",
+    name: "Suggestions",
+    ratio: 5,
+    displayField: "word",
+    data: (query: string) => {
+      const data = getTopDictionarySuggestions(query);
+      return data;
+    },
     searchType: "contains",
   },
 ];
 
 // Custom Item component
-const Item = (props) => {
+const Item = (props: any) => {
   const {
     appearsInDefaultListbox,
     index,
@@ -70,7 +74,7 @@ const Item = (props) => {
 
   const globalMatch = searchType === "contains";
   const iconType = item.icon || item.type;
-  const SplitComponent = (props) => {
+  const SplitComponent = (props: any) => {
     const { children, index: splitIndex } = props;
     const doubleLine = index === 0 && !appearsInDefaultListbox;
     const fontWeight = appearsInDefaultListbox
@@ -93,7 +97,7 @@ const Item = (props) => {
     return <span className={className}>{children}</span>;
   };
 
-  const MatchComponent = (props) => {
+  const MatchComponent = (props: any) => {
     const { children } = props;
     const className = appearsInDefaultListbox
       ? "font-light"
@@ -105,7 +109,7 @@ const Item = (props) => {
     return <span className={className}>{children}</span>;
   };
 
-  const matchedText = (includeSeparator) => {
+  const matchedText = (includeSeparator: any) => {
     return (
       <SplitMatch
         searchText={query}
@@ -120,74 +124,15 @@ const Item = (props) => {
     );
   };
 
-  const SubLocations = () => {
-    if (totalItems <= 5 && (item.neighbourhoods || item.attractions)) {
-      const neighbourhoods =
-        totalItems > 1 ? item.neighbourhoods.slice(0, 5) : item.neighbourhoods;
-      const attractions =
-        totalItems > 1 ? item.attractions.slice(0, 5) : item.attractions;
-
-      return (
-        <div className="whitespace-normal pl-4 my-1">
-          <SubLocationList title="Neighbourhoods" data={neighbourhoods} />
-          <SubLocationList title="Attractions" data={attractions} />
-        </div>
-      );
-    }
-    return null;
-  };
-
-  const SubLocationList = (props) => {
-    const { title, data } = props;
-
-    if (!data || !data.length) return null;
-
-    return (
-      <div className="align-top pl-6 mb-2 inline-block">
-        <div className="cursor-default my-0.5 pl-2.5 uppercase text-xs sm:text-sm text-hotpink-300">
-          {title}
-        </div>
-        <>
-          {data.map((value, index) => (
-            <SubLocation key={`neighbourhood${index}`} value={value}>
-              {value.name.split(",")[0]}
-            </SubLocation>
-          ))}
-        </>
-      </div>
-    );
-  };
-
-  const SubLocation = (props) => {
-    const { children, value } = props;
-
-    const handleClick = (evt, value) => {
-      evt.stopPropagation();
-      setSelected(value, "name");
-    };
-
-    return (
-      <div>
-        <div
-          className="px-2.5 py-0.5 text-sm text-crystal-600 hover:rounded-md hover:text-white hover:bg-crystal-600"
-          onMouseDown={(evt) => handleClick(evt, value)}
-        >
-          {children}
-        </div>
-      </div>
-    );
-  };
-
   const firstItem = () => {
     return (
       <>
-        <div className="inline-block w-10 mr-2.5 text-cerulean-600">
-          <Icon type={iconType} className="h-10 w-10" />
+        <div className="inline-block align-middle text-center w-10 mr-2.5 text-cerulean-600">
+          <Icon type={iconType} className=" text-primary h-7 w-10 " />
         </div>
         <div className="inline-block text-oldsilver-600">
           {matchedText(false)}
         </div>
-        {SubLocations()}
       </>
     );
   };
@@ -213,6 +158,27 @@ const Clear = () => <Icon type="clear" className="w-6 h-6" />;
 
 export default function SearchBar() {
   const [hasFocus, setHasFocus] = useState(false);
+  const { setSearchQuery, setSearchResults } = useSearchStore();
+
+ const handleOnEnter = async (enteredQuery: string, selectedItem: ListItem) => {
+   console.log("Input value:", enteredQuery);
+   console.log("Selected item:", selectedItem);
+
+   //set the entered query to the search store
+   setSearchQuery(enteredQuery);
+   // You can perform other actions here, like fetching data based on the query or the selected item
+   try {
+     const dataResult = await getDictionaryApiData(enteredQuery);
+     setSearchResults(dataResult);
+   } catch (error) {
+     console.error("Error fetching data", error);
+   }
+
+   //set the entered query to the search store
+
+   // You can perform other actions here, like fetching data based on the query or the selected item
+ };
+
 
   // Style the container so on mobile devices the search box and results
   // take up the whole screen
@@ -234,10 +200,11 @@ export default function SearchBar() {
       >
         <Icon type="search" className="w-6 h-6" />
       </span>
-      <Turnstone      
+      <Turnstone
+
         cancelButton={true}
         clearButton={true}
-        debounceWait={250}      
+        debounceWait={250}
         id="autocomplete"
         listbox={listbox}
         listboxIsImmutable={true}
@@ -245,8 +212,9 @@ export default function SearchBar() {
         maxItems={maxItems}
         noItemsMessage="We found no places that match your search"
         onBlur={onBlur}
+        onEnter={handleOnEnter}
         onFocus={onFocus}
-        placeholder="Enter a city or airport"
+        placeholder="Search for a word"
         plugins={[[RecentSearchesPlugin, { storageKey: "turnstoneExample2" }]]}
         styles={styles}
         Cancel={Cancel}

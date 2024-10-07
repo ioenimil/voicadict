@@ -5,8 +5,16 @@ import SearchBar from "./search-bar";
 import { Separator } from "./ui/separator";
 import WordWithAudio from "./word-with-audio";
 import Link from "next/link";
+import { useSearchStore } from "@/store/search-store";
 
 function MainSection() {
+
+  const {searchResults} = useSearchStore()
+
+  console.log("searchResults", searchResults)
+
+
+
   const data = [
     "(etc.) A set of keys used to operate a typewriter, computer etc.",
     "A device with keys of a musical keyboard, used to control electronic sound-producing devices which may be built into or separate from the keyboard device.",
