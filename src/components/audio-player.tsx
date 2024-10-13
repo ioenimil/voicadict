@@ -3,7 +3,7 @@ import { Button } from "./ui/button";
 import { PlayIcon, PauseIcon } from "lucide-react";
 
 interface AudioPlayerProps {
-  audioLink: string;
+  audioLink: string | undefined;
 }
 
 function AudioPlayer({ audioLink }: AudioPlayerProps) {
@@ -25,13 +25,14 @@ function AudioPlayer({ audioLink }: AudioPlayerProps) {
       setIsPlaying(false);
     };
 
-    if (audioRef.current) {
-      audioRef.current.addEventListener("ended", handleEnded);
+    const audioElement = audioRef.current;
+    if (audioElement) {
+      audioElement.addEventListener("ended", handleEnded);
     }
 
     return () => {
-      if (audioRef.current) {
-        audioRef.current.removeEventListener("ended", handleEnded);
+      if (audioElement) {
+        audioElement.removeEventListener("ended", handleEnded);
       }
     };
   }, [audioRef]);
@@ -40,19 +41,19 @@ function AudioPlayer({ audioLink }: AudioPlayerProps) {
     <div>
       <audio ref={audioRef} src={audioLink} />
       <Button
-      variant={"default"}
+        variant={"default"}
         onClick={handlePlayClick}
-        className=" h-11 w-11 group sm:h-20 hover:bg-primary bg-primary/25 shadow-md   sm:w-20 flex items-center justify-center rounded-full"
+        className="group flex h-12 w-12 items-center justify-center rounded-full bg-primary/25 shadow-md hover:bg-primary sm:h-20 sm:w-20"
       >
         {isPlaying ? (
           <PauseIcon
             size={30}
-            className=" text-primary group-hover:text-secondary dark:group-hover:text-foreground h-3 w-3 sm:h-7 sm:w-7 fill-current"
+            className="h-3 w-3 fill-current text-primary group-hover:text-secondary dark:group-hover:text-foreground sm:h-7 sm:w-7"
           />
         ) : (
           <PlayIcon
             size={30}
-            className="  text-primary group-hover:text-secondary dark:group-hover:text-foreground h-3 w-3 sm:h-7 sm:w-7 fill-current"
+            className="h-4 w-4 fill-current text-primary group-hover:text-secondary dark:group-hover:text-foreground sm:h-7 sm:w-7"
           />
         )}
       </Button>

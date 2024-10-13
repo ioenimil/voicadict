@@ -1,4 +1,5 @@
 import { getDictionaryApiData } from "@/lib/api-helper";
+import {type ApiResponse} from "@/types/types"
 import { create } from "zustand";
 interface SearchStore {
   // State properties
@@ -7,7 +8,7 @@ interface SearchStore {
   isError: boolean;
   errorMessage: string;
   searchQuery: string;
-  searchResults: object; // Replace 'any' with the specific type of your search results
+  searchResults: ApiResponse; // Replace 'any' with the specific type of your search results
   suggestedWords: string[];
   isAudioPlaying: boolean;
   selectedResultIndex: number;
@@ -17,7 +18,7 @@ interface SearchStore {
   setIsSearching: (isSearching: boolean) => void;
   setIsLoading: (isLoading: boolean) => void;
   setIsError: (isError: boolean, errorMessage?: string) => void;
-  setSearchResults: (results: object) => void; // Replace 'any' with the specific type if needed
+  setSearchResults: (results: ApiResponse) => void; // Replace 'any' with the specific type if needed
   setSuggestedWords: (words: string[]) => void;
   toggleAudio: () => void;
   setSelectedResultIndex: (index: number) => void;

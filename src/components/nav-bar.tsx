@@ -9,24 +9,24 @@ type Props = object;
 
 export default function NavBar({}: Props) {
   return (
-    <nav className=" flex justify-between  w-full">
+    <nav className="flex w-full justify-between">
       <Image
         src="/assets/images/svg/iconoir_book.svg"
         alt="Logo"
         width={32}
         height={36}
       />
-      <div className=" flex  gap-4 items-center justify-between">
+      <div className="flex items-center justify-between gap-4">
         <div>
           <FontSelect />
         </div>
         <Separator orientation="vertical" />
-        <div className=" flex items-center gap-4">
+        <div className="flex items-center gap-4">
           <div>
             <ModeToggle />
           </div>
           <div>
-            <UserProfile  />
+            <UserProfile />
           </div>
         </div>
       </div>

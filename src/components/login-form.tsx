@@ -6,13 +6,13 @@ export const description =
   "A simple login form with email and password. The submit button says 'Sign in'.";
 export function LoginForm() {
   return (
-    <section className=" space-y-6">
+    <section className="space-y-6">
       <div className="grid gap-2">
-        <Label className=" text-xl" htmlFor="email">
+        <Label className="text-xl" htmlFor="email">
           Email
         </Label>
         <Input
-          className=" h-14 text-xl placeholder:text-xl"
+          className="h-14 text-xl placeholder:text-xl"
           id="email"
           type="email"
           placeholder="m@example.com"
@@ -24,16 +24,16 @@ export function LoginForm() {
           Password
         </Label>
         <Input
-          className=" h-14 text-xl placeholder:text-xl"
+          className="h-14 text-xl placeholder:text-xl"
           id="password"
           type="password"
           placeholder="pas@$word."
           required
         />
       </div>
-      <div className=" w-full flex justify-between">
+      <div className="flex w-full justify-between">
         <div className="items-top flex space-x-2">
-          <Checkbox id="terms1" className=" rounded-full" />
+          <Checkbox id="terms1" className="rounded-full" />
           <div className="grid gap-1.5 leading-none">
             <label
               htmlFor="terms1"
@@ -44,7 +44,7 @@ export function LoginForm() {
           </div>
         </div>
 
-        <Link className=" text-lg text-primary" href={"/"}>
+        <Link className="text-lg text-primary" href={"/"}>
           Forgot Password ?
         </Link>
       </div>

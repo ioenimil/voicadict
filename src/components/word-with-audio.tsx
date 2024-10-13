@@ -1,25 +1,26 @@
-import React from 'react'
-import AudioPlayer from './audio-player';
+import React from "react";
+import AudioPlayer from "./audio-player";
 
-
-interface WordWithAudioProp{
-    word:string
-    pronouciaiton:string
-    audioLink:string
+interface WordWithAudioProp {
+  word: string;
+  pronouciaiton: string;
+  audioLink: string | undefined;
 }
-function WordWithAudio({word, pronouciaiton, audioLink}:WordWithAudioProp) {
+function WordWithAudio({ word, pronouciaiton, audioLink }: WordWithAudioProp) {
   return (
-    <section className=" md:h-[116px] ">
-      <div className=" w-full flex justify-between h-[114px] items-center">
-        <div className='sm:space-y-4'>
-          <h2 className="text-4xl sm:text-6xl leading-[5rem]  font-bold">{word}</h2>
-          <p className=" text-2xl text-primary">{pronouciaiton}</p>
+    <section className="sticky top-0 z-[2] backdrop-blur-md md:h-[116px]">
+      <div className="flex h-[114px] w-full items-center justify-between">
+        <div className="sm:space-y-4">
+          <h2 className="text-4xl font-bold leading-[5rem] sm:text-6xl">
+            {word}
+          </h2>
+          <p className="text-2xl text-primary">{pronouciaiton}</p>
         </div>
 
-        <AudioPlayer audioLink={audioLink}/>
+        <AudioPlayer audioLink={audioLink} />
       </div>
     </section>
   );
 }
 
-export default WordWithAudio
+export default WordWithAudio;

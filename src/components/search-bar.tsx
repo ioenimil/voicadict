@@ -3,8 +3,10 @@ import Turnstone from "turnstone";
 import SplitMatch from "split-match";
 import RecentSearchesPlugin from "turnstone-recent-searches";
 import Icon from "./search-bar-icon";
-import { get, set } from "lodash";
-import { getDictionaryApiData, getTopDictionarySuggestions } from "@/lib/api-helper";
+import {
+  getDictionaryApiData,
+  getTopDictionarySuggestions,
+} from "@/lib/api-helper";
 import { useSearchStore } from "@/store/search-store";
 
 interface ListItem {
@@ -23,19 +25,19 @@ interface ListItem {
 // Tailwind classes for Turnstone elements
 const styles = {
   input:
-    "w-full h-12 border border-crystal-400 py-2 pl-10 pr-9 text-xl text-oldsilver-800 outline-none rounded-md",
+    "w-full h-12 border bg-background text-foreground border-crystal-400 py-2 pl-10 pr-9 text-xl text-oldsilver-800 outline-none rounded-md",
   inputFocus:
-    "w-full h-12 border-x-0 border-t-0 border-b border-crystal-500 py-2 pl-10 pr-9 text-xl text-oldsilver-800 outline-none sm:rounded-md sm:border",
-  query: "text-oldsilver-800 placeholder-oldsilver-400",
+    "w-full h-12 border-x-0 border-t-0 border-b border-primary py-2 pl-10 pr-9 text-xl text-foreground/70 outline-none sm:rounded-md sm:border",
+  query: "text-oldsilver-800 placeholder-foreground/70",
   typeahead: "text-oldsilver-400 border-white",
   cancelButton: `absolute w-10 h-12 inset-y-0 left-0 items-center justify-center z-10 text-crystal-600 inline-flex sm:hidden`,
   clearButton:
-    "absolute inset-y-0 right-0 w-10 inline-flex items-center justify-center text-crystal-500 hover:text-hotpink-300",
+    "absolute inset-y-0 right-0 w-10 inline-flex items-center justify-center text-crystal-500 hover:text-primary",
   listbox:
-    "w-full bg-white sm:border sm:border-crystal-500 sm:rounded-md text-left sm:mt-2 p-2 sm:drop-shadow-xl",
+    "w-full bg-background text-foreground sm:border sm:border-crystal-500 sm:rounded-md text-left sm:mt-2 p-2 sm:drop-shadow-xl",
   groupHeading:
     "cursor-default mt-2 mb-0.5 px-1.5 uppercase text-sm text-hotpink-500",
-  item: "cursor-pointer p-1.5 text-lg whitespace-nowrap text-ellipsis overflow-hidden text-oldsilver-700",
+    item: "cursor-pointer p-2 text-lg whitespace-nowrap hover:bg-primary hover:text-white transition-colors duration-200 ease-in-out rounded-md text-ellipsis overflow-hidden text-foreground",
   highlightedItem:
     "cursor-pointer p-1.5 text-lg whitespace-nowrap sm:text-ellipsis overflow-hidden text-oldsilver-700 rounded-md bg-gradient-to-t from-crystal-100 to-white",
   noItems: "cursor-default text-center my-20",
@@ -127,10 +129,10 @@ const Item = (props: any) => {
   const firstItem = () => {
     return (
       <>
-        <div className="inline-block align-middle text-center w-10 mr-2.5 text-cerulean-600">
-          <Icon type={iconType} className=" text-primary h-7 w-10 " />
+        <div className="text-cerulean-600 mr-2.5 inline-block w-10 text-center align-middle">
+          <Icon type={iconType} className="h-7 w-10 text-primary" />
         </div>
-        <div className="inline-block text-oldsilver-600">
+        <div className="text-oldsilver-600 inline-block">
           {matchedText(false)}
         </div>
       </>
@@ -140,10 +142,10 @@ const Item = (props: any) => {
   const standardItem = () => {
     return (
       <>
-        <div className="inline-block w-10 mr-2.5 text-center align-middle text-cerulean-600">
+        <div className="text-cerulean-600 mr-2.5 inline-block w-10 text-center align-middle">
           <Icon type={iconType} className="h-7 w-10" />
         </div>
-        <span className="align-middle text-oldsilver-600">
+        <span className="text-oldsilver-600 align-middle">
           {matchedText(true)}
         </span>
       </>
@@ -153,38 +155,38 @@ const Item = (props: any) => {
   return index === 0 && !appearsInDefaultListbox ? firstItem() : standardItem();
 };
 
-const Cancel = () => <Icon type="cancel" className="w-8 h-8" />;
-const Clear = () => <Icon type="clear" className="w-6 h-6" />;
+const Cancel = () => <Icon type="cancel" className="h-8 w-8" />;
+const Clear = () => <Icon type="clear" className="h-6 w-6" />;
 
 export default function SearchBar() {
   const [hasFocus, setHasFocus] = useState(false);
   const { setSearchQuery, setSearchResults } = useSearchStore();
 
- const handleOnEnter = async (enteredQuery: string, selectedItem: ListItem) => {
-   console.log("Input value:", enteredQuery);
-   console.log("Selected item:", selectedItem);
+  const handleOnEnter = async (
+    enteredQuery: string,
+    selectedItem: ListItem,
+  ) => {
+   
+    //set the entered query to the search store
+    setSearchQuery(enteredQuery);
+    // You can perform other actions here, like fetching data based on the query or the selected item
+    try {
+      const dataResult = await getDictionaryApiData(enteredQuery);
+      setSearchResults(dataResult);
+    } catch (error) {
+      console.error("Error fetching data", error);
+    }
 
-   //set the entered query to the search store
-   setSearchQuery(enteredQuery);
-   // You can perform other actions here, like fetching data based on the query or the selected item
-   try {
-     const dataResult = await getDictionaryApiData(enteredQuery);
-     setSearchResults(dataResult);
-   } catch (error) {
-     console.error("Error fetching data", error);
-   }
+    //set the entered query to the search store
 
-   //set the entered query to the search store
-
-   // You can perform other actions here, like fetching data based on the query or the selected item
- };
-
+    // You can perform other actions here, like fetching data based on the query or the selected item
+  };
 
   // Style the container so on mobile devices the search box and results
   // take up the whole screen
   const containerStyles = hasFocus
-    ? "fixed block w-full h-full top-0 left-0 bg-white z-50 overflow-auto sm:relative sm:h-auto sm:top-auto sm:left-auto sm:bg-transparent sm:z-auto sm:overflow-visible"
-    : "relative  ";
+    ? "fixed block bg:background w-full h-full top-0 left-0 bg-white z-50 overflow-auto sm:relative sm:h-auto sm:top-auto sm:left-auto sm:bg-transparent sm:z-auto sm:overflow-visible"
+    : "relative bg:background  ";
 
   const iconDisplayStyle = hasFocus
     ? "hidden text-crystal-600"
@@ -196,12 +198,11 @@ export default function SearchBar() {
   return (
     <div className={containerStyles}>
       <span
-        className={`absolute w-10 h-12 inset-y-0 left-0 items-center justify-center z-10 sm:inline-flex ${iconDisplayStyle}`}
+        className={`absolute inset-y-0 left-0 z-10 h-12 w-10 items-center justify-center sm:inline-flex ${iconDisplayStyle}`}
       >
-        <Icon type="search" className="w-6 h-6" />
+        <Icon type="search" className="h-6 w-6" />
       </span>
       <Turnstone
-
         cancelButton={true}
         clearButton={true}
         debounceWait={250}
@@ -210,7 +211,7 @@ export default function SearchBar() {
         listboxIsImmutable={true}
         matchText={true}
         maxItems={maxItems}
-        noItemsMessage="We found no places that match your search"
+        noItemsMessage="We found no words that match your search"
         onBlur={onBlur}
         onEnter={handleOnEnter}
         onFocus={onFocus}

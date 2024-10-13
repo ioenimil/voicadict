@@ -1,16 +1,16 @@
 import { Button } from "@/components/ui/button";
 import React from "react";
 
-type Props = {};
+type Props = {""};
 
-function UsersPage({}: Props) {
+function WordListPage({}: Props) {
   return (
     <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
       <div className="flex items-center">
-        <h1 className="text-lg font-semibold md:text-2xl">Users</h1>
+        <h1 className="text-lg font-semibold md:text-2xl">Home</h1>
       </div>
       <div
-        className="flex  flex-1 items-center justify-center rounded-lg border border-dashed shadow-sm"
+        className="flex flex-1 items-center justify-center rounded-lg border border-dashed shadow-sm"
         x-chunk="dashboard-02-chunk-1"
       >
         <div className="flex flex-col items-center gap-1 text-center">
@@ -27,4 +27,4 @@ function UsersPage({}: Props) {
   );
 }
 
-export default UsersPage;
+export default WordListPage;

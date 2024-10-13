@@ -25,8 +25,8 @@ export function UserProfile() {
   return (
     <Dialog>
       <DropdownMenu>
-        <DropdownMenuTrigger className=" block">
-          <UserRound className=" block bg-secondary rounded-full" />
+        <DropdownMenuTrigger className="block">
+          <UserRound className="block rounded-full bg-secondary" />
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuArrow />
@@ -46,11 +46,11 @@ export function UserProfile() {
         </DropdownMenuContent>
       </DropdownMenu>
 
-      <DialogContent >
+      <DialogContent>
         <DialogHeader>
-          <DialogTitle className=" text-center text-4xl">Log In</DialogTitle>
+          <DialogTitle className="text-center text-4xl">Log In</DialogTitle>
         </DialogHeader>
-       <LoginForm />
+        <LoginForm />
 
         {/* <DialogContent>
           <div className="grid gap-2">
@@ -68,8 +68,10 @@ export function UserProfile() {
           </div>
         </DialogContent> */}
 
-        <DialogFooter className=" mt-4">
-          <Button className=" w-full rounded-3xl h-14" type="submit">Confirm</Button>
+        <DialogFooter className="mt-4">
+          <Button className="h-14 w-full rounded-3xl" type="submit">
+            Confirm
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

@@ -1,11 +1,10 @@
 import React from "react";
 import { Search } from "lucide-react";
 import { X } from "lucide-react";
-import {  Lightbulb } from "lucide-react";
+import { Lightbulb } from "lucide-react";
 
-
-function Icon({ type, className }: { type: string, className:string }) {
-  console.log("type", type);
+function Icon({ type, className }: { type: string; className: string }) {
+ 
   switch (type) {
     case "search":
       return <Search className={className} />;

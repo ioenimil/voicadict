@@ -8,122 +8,137 @@ import Link from "next/link";
 import { useSearchStore } from "@/store/search-store";
 
 function MainSection() {
+  const { searchResults, searchQuery } = useSearchStore();
+  let word;
+  let phonetics;
+  let meanings;  
+  let sourceUrls;
 
-  const {searchResults} = useSearchStore()
+  if (searchResults.length > 0) {
+    word = searchResults[0].word;
+    phonetics = searchResults[0].phonetics.filter((phonetic) => {
+      const hasText = phonetic.text || null;
+      const hasAudio = phonetic.audio || null;
+      const hasSourceUrl = phonetic.sourceUrl || null;
+      const hasLicense = phonetic.license || null;
 
-  console.log("searchResults", searchResults)
+      if (hasText && hasAudio && hasSourceUrl && hasLicense) {
+        return true;
+      }
+      return false;
+    });
+    meanings = searchResults[0].meanings;
+    
+    sourceUrls = searchResults[0].sourceUrls;
+  }
 
-
-
-  const data = [
-    "(etc.) A set of keys used to operate a typewriter, computer etc.",
-    "A device with keys of a musical keyboard, used to control electronic sound-producing devices which may be built into or separate from the keyboard device.",
-    "A component of many instruments including the piano, organ, and harpsichord consisting of usually black and white keys that cause different tones to be produced when struck.",
-  ];
-
-  const verbData = [
-    "To type on a computer keyboard.",
-    "Keyboarding is the part of this job I hate the most.",
-    "To enter (data) by typing on a computer keyboard.",
-  ];
+ 
   return (
     <>
       <SearchBar />
-      <WordWithAudio
-        word={"Keyboard"}
-        pronouciaiton={"/ˈkiːbɔːd/"}
-        audioLink={"/assets/sounds/what.mp3"}
-      />
-      <ScrollArea className=" h-full flex flex-col  justify-between ">
-        <div className=" flex flex-col gap-8">
-          <section className=" space-y-8 ">
-            <div className=" flex justify-between items-center gap-5">
-              <h1 className="text-2xl font-bold">noun</h1>
-              <Separator />
-            </div>
-            <div className=" text-xl font-normal items-center flex gap-10 text-mild-muted">
-              Meaning
-            </div>
-            <ul className="pl-8 h-full space-y-4">
-              {data.map((item, index) => (
-                <div
-                  key={index}
-                  className=" relative flex p-1 items-center gap-4"
-                >
-                  <span className="before:absolute  text-xl before:top-1/2 before:-left-5 before:h-2 before:w-2 before:rounded-full before:bg-primary before:-translate-x-1/2 before:-translate-y-1/2">
-                    {item}
-                  </span>
-                </div>
+      {searchResults && searchResults.length > 0 ? (
+        <main>
+          <WordWithAudio
+            word={word ? word : ""}
+            pronouciaiton={
+              phonetics && phonetics[0]?.text ? phonetics[0].text : ""
+            }
+            audioLink={
+              phonetics && phonetics[0]?.audio ? phonetics[0].audio : undefined
+            }
+          />
+          <ScrollArea className="flex h-full flex-col justify-between">
+            <div className="flex flex-col gap-8">
+              {meanings?.map((meaning, index) => (
+                <section key={index} className="space-y-8">
+                  <div className="flex items-center justify-between gap-5">
+                    <h1 className="text-2xl font-bold">
+                      {meaning.partOfSpeech}
+                    </h1>
+                    <Separator />
+                  </div>
+                  <div className="text-mild-muted flex items-center gap-10 text-xl font-normal">
+                    Meaning
+                  </div>
+                  <ul className="h-full space-y-4 pl-8">
+                    {meaning.definitions.map((definitionObject, index) => (
+                      <div className="" key={index}>
+                        <div
+                          key={index}
+                          className="relative flex items-center gap-4 p-1"
+                        >
+                          {definitionObject.definition && (
+                            <span className="flex flex-col gap-4 text-xl before:absolute before:-left-5 before:top-1/2 before:h-2 before:w-2 before:-translate-x-1/2 before:-translate-y-1/2 before:rounded-full before:bg-primary">
+                              {definitionObject.definition}
+                            </span>
+                          )}
+                        </div>
+
+                        {definitionObject.example && (
+                          <div className="pl-8 font-light italic">
+                            Eg: {definitionObject.example}
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </ul>
+                  {meaning.synonyms.length > 0 && (
+                    <div className="text-mild-muted flex items-center gap-10 text-xl font-normal">
+                      <span>Synonyms</span>
+                      <div>
+                        {meaning?.synonyms.map((synonym, index) => (
+                          <Button
+                            key={index}
+                            className="text-xl font-bold"
+                            variant={"link"}
+                          >
+                            {synonym}
+                          </Button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  {meaning.antonyms.length > 0 && (
+                    <div className="text-mild-muted flex items-center gap-10 text-xl font-normal">
+                      <span>Antonyms</span>
+                      <div>
+                        {meaning?.antonyms.map((antonym, index) => (
+                          <Button
+                            key={index}
+                            className="text-xl font-bold"
+                            variant={"link"}
+                          >
+                            {antonym}
+                          </Button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </section>
               ))}
-            </ul>
-            <div className=" text-xl font-normal items-center flex gap-10 text-mild-muted">
-              <span>Synonyms</span>
-              <div>
-                <Button className=" text-xl font-bold " variant={"link"}>
-                  Ant
-                </Button>
-                <Button className=" text-xl font-bold " variant={"link"}>
-                  Stant
-                </Button>
-                <Button className=" text-xl font-bold" variant={"link"}>
-                  Pant
-                </Button>
-              </div>
-            </div>
-          </section>
-          <section className=" space-y-8 ">
-            <div className=" flex justify-between items-center gap-5">
-              <h1 className="text-2xl font-bold">verb</h1>
+
               <Separator />
-            </div>
-            <div className=" text-xl font-normal items-center flex gap-10 text-mild-muted">
-              Meaning
-            </div>
-            <ul className="pl-8 h-full space-y-4">
-              {verbData.map((item, index) => (
-                <div
-                  key={index}
-                  className=" relative flex p-1 items-center gap-4"
-                >
-                  <span className="before:absolute  text-xl before:top-1/2 before:-left-5 before:h-2 before:w-2 before:rounded-full before:bg-primary before:-translate-x-1/2 before:-translate-y-1/2">
-                    {item}
-                  </span>
+              <footer>
+                <div className="text-mild-muted flex items-center gap-10 text-lg font-normal">
+                  <span>Source</span>
+                  <Link
+                    target="_blank"
+                    className="focus:outline-none"
+                    href={sourceUrls ? sourceUrls[0] : "#"}
+                  >
+                    {" "}
+                    <Button className="text-base" variant={"link"}>
+                      {sourceUrls && sourceUrls[0]}
+                    </Button>
+                  </Link>
                 </div>
-              ))}
-            </ul>
-            <div className=" text-xl font-normal items-center flex gap-10 text-mild-muted">
-              <span>Synonyms</span>
-              <div>
-                <Button className=" text-xl font-bold " variant={"link"}>
-                  Ant
-                </Button>
-                <Button className=" text-xl font-bold " variant={"link"}>
-                  Stant
-                </Button>
-                <Button className=" text-xl font-bold" variant={"link"}>
-                  Pant
-                </Button>
-              </div>
+              </footer>
             </div>
-          </section>
-          <Separator />
-          <footer>
-            <div className=" text-lg font-normal items-center flex gap-10 text-mild-muted">
-              <span>Source</span>
-              <Link
-              target="_blank"
-                className=" focus:outline-none"
-                href={"https://en.wiktionary.org/wiki/keyboard"}
-              >
-                {" "}
-                <Button className=" text-base  " variant={"link"}>
-                  https://en.wiktionary.org/wiki/keyboard
-                </Button>
-              </Link>
-            </div>
-          </footer>
-        </div>
-      </ScrollArea>
+          </ScrollArea>
+        </main>
+      ) : (
+        <h1>No result for {searchQuery}</h1>
+      )}
     </>
   );
 }
