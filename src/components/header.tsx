@@ -8,7 +8,6 @@ import {
 } from "./ui/dropdown-menu";
 import { Button } from "./ui/button";
 
-import { Input } from "./ui/input";
 import Link from "next/link";
 
 import {
@@ -18,7 +17,6 @@ import {
   Menu,
   Package,
   Package2,
-  Search,
   ShoppingCart,
   Users,
 } from "lucide-react";
@@ -38,10 +36,10 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 function Header() {
   return (
-    <header className="flex h-14 items-center justify-between md:justify-end  gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
+    <header className="flex h-14 items-center justify-between gap-4 border-b bg-muted/40 px-4 md:justify-end lg:h-[60px] lg:px-6">
       <Sheet>
         <SheetTrigger asChild>
-          <Button variant="outline" size="icon" className="shrink-0 md:hidden ">
+          <Button variant="outline" size="icon" className="shrink-0 md:hidden">
             <Menu className="h-5 w-5" />
             <span className="sr-only">Toggle navigation menu</span>
           </Button>
