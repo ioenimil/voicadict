@@ -17,7 +17,9 @@ function WordWithAudio({ word, pronouciaiton, audioLink }: WordWithAudioProp) {
           <p className="text-2xl text-primary">{pronouciaiton}</p>
         </div>
 
-        <AudioPlayer audioLink={audioLink} />
+       {
+        audioLink&& <AudioPlayer audioLink={audioLink} />
+       }
       </div>
     </section>
   );

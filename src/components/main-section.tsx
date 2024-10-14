@@ -16,7 +16,7 @@ function MainSection() {
 
   if (searchResults.length > 0) {
     word = searchResults[0].word;
-    phonetics = searchResults[0].phonetics.filter((phonetic) => {
+    phonetics = searchResults[0]?.phonetics?.filter((phonetic) => {
       const hasText = phonetic.text || null;
       const hasAudio = phonetic.audio || null;
       const hasSourceUrl = phonetic.sourceUrl || null;
@@ -137,7 +137,7 @@ function MainSection() {
           </ScrollArea>
         </main>
       ) : (
-        <h1>No result for {searchQuery}</h1>
+        <h1>No result for {searchQuery.toUpperCase()}</h1>
       )}
     </>
   );
